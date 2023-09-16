@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=3 uid="uid://j7g30mgrg36w"]
+
+[ext_resource type="PackedScene" uid="uid://b6cr76xkk0al" path="res://cars/sedanSports.glb" id="1_d4qm0"]
+[ext_resource type="Script" path="res://cars/sedan_sports.gd" id="2_5j0jw"]
+
+[sub_resource type="Curve" id="Curve_3rkfc"]
+_data = [Vector2(0, 0.073), 0.0, 0.0, 0, 0, Vector2(0.1, 0.08), 0.0, 0.7, 0, 0, Vector2(0.260663, 1), 0.0, 0.0, 0, 0, Vector2(0.9, 1), 0.0, -1.5, 0, 0, Vector2(1, 0), -9.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_8b5cl"]
+points = PackedVector3Array(-0.681606, 0.371285, -0.689196, 0.685885, 0.136808, 0.287635, -0.578186, -5.55112e-17, 1.17343, 0.582594, -5.55112e-17, -1.22343, -0.449433, 0.882996, -0.566894, 0.459748, 0.888792, -0.537208, -0.578186, -5.55112e-17, -1.22343, -0.517571, 0.520991, 0.942632, 0.582594, 5.55112e-17, 1.17343, 0.543459, 0.412135, -1.21975, 0.445896, 0.875491, 0.18765, 0.507587, 0.412114, 1.13548, -0.536562, 0.412403, -1.21397, 0.685885, 0.527449, -0.689196, -0.681606, 0.488339, 0.834562, -0.436048, 0.870145, 0.184982, 0.646925, 0.527449, 0.717294, -0.681606, 0.214937, 1.1472, 0.657396, -5.55112e-17, -1.14836, -0.681606, 0.527449, -0.689196, 0.607831, 0.215028, 1.22554, -0.646101, 0.00481128, -0.358074, -0.603418, 0.214937, -1.27554, 0.607831, 0.215028, -1.27554, -0.239266, 0.412394, 1.12678, 0.685885, 0.215028, -1.1972, -0.653116, -5.55112e-17, 1.09836, 0.646925, 0.215028, 1.18612, -0.642512, 0.214937, -1.23612, 0.620059, -1.66533e-16, 1.13566, -0.640804, 0.596344, 0.415853, 0.521531, 0.48518, 1.01385)
+
+[node name="sedanSports" instance=ExtResource("1_d4qm0")]
+mass = 1300.0
+center_of_mass_mode = 1
+script = ExtResource("2_5j0jw")
+steer_speed = 0.2
+max_engine_rpm = 6000.0
+power_curve = SubResource("Curve_3rkfc")
+
+[node name="rearRight" parent="." index="2"]
+use_as_traction = true
+wheel_radius = 0.3
+suspension_travel = 0.025
+suspension_stiffness = 110.0
+
+[node name="frontRight" parent="." index="3"]
+use_as_steering = true
+wheel_radius = 0.3
+suspension_travel = 0.025
+suspension_stiffness = 110.0
+
+[node name="frontLeft" parent="." index="4"]
+use_as_steering = true
+wheel_radius = 0.3
+suspension_travel = 0.025
+suspension_stiffness = 110.0
+
+[node name="rearLeft" parent="." index="5"]
+use_as_traction = true
+wheel_radius = 0.3
+suspension_travel = 0.025
+suspension_stiffness = 110.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("ConvexPolygonShape3D_8b5cl")
+
+[node name="CameraTargets" type="Node3D" parent="." index="7"]
+
+[node name="ChaseClose" type="Marker3D" parent="CameraTargets" index="0"]
+transform = Transform3D(-1, -3.12156e-15, -8.74228e-08, -2.67233e-08, 0.952135, 0.305679, 8.32383e-08, 0.305679, -0.952135, 0, 1.85845, -3.5167)
+
+[node name="RightSide" type="Marker3D" parent="CameraTargets" index="1"]
+transform = Transform3D(-3.92446e-08, 0.440378, -0.897812, 1.92495e-08, 0.897812, 0.440378, 1, 0, -4.37114e-08, -2.27888, 1.65718, 0)
+
+[node name="Top" type="Marker3D" parent="CameraTargets" index="2"]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 5.74769, 2.31656)

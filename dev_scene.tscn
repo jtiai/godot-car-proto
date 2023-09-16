@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3 uid="uid://nrmtcuje0y5e"]
+
+[ext_resource type="Script" path="res://dev_scene.gd" id="1_310eq"]
+[ext_resource type="Script" path="res://chase_camera.gd" id="3_8j2t1"]
+[ext_resource type="PackedScene" uid="uid://b06v4mokr40fs" path="res://tracks/dev_track/dev_track.tscn" id="3_tng5q"]
+[ext_resource type="Texture2D" uid="uid://ctoeldxnfvp85" path="res://skies/drakensberg_solitary_mountain_4k.exr" id="3_w63p6"]
+[ext_resource type="PackedScene" uid="uid://j7g30mgrg36w" path="res://cars/sedan_sports.tscn" id="4_vhwnn"]
+[ext_resource type="Script" path="res://car_ai.gd" id="6_o6ajw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b5ond"]
+bg_color = Color(0, 0, 0, 0.623529)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_x1i83"]
+panorama = ExtResource("3_w63p6")
+
+[sub_resource type="Sky" id="Sky_1ri51"]
+sky_material = SubResource("PanoramaSkyMaterial_x1i83")
+
+[sub_resource type="Environment" id="Environment_nm2au"]
+background_mode = 2
+sky = SubResource("Sky_1ri51")
+sky_custom_fov = 45.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8r7w5"]
+albedo_color = Color(0.0235294, 0.0745098, 1, 1)
+metallic = 1.0
+metallic_specular = 0.48
+clearcoat_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_6v1wu"]
+material = SubResource("StandardMaterial3D_8r7w5")
+size = Vector3(1, 1, 2.017)
+
+[node name="DevScene" type="Node3D"]
+script = ExtResource("1_310eq")
+
+[node name="ChaseCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.790155, 0.612907, 0, -0.612907, 0.790155, 0, 5.80232, 50.4665)
+current = true
+far = 600.0
+script = ExtResource("3_8j2t1")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Info" type="Label" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_b5ond")
+text = "Info"
+metadata/_edit_use_anchors_ = true
+
+[node name="Game" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Game"]
+transform = Transform3D(-0.861638, -0.068339, -0.502901, -0.285915, -0.753331, 0.592237, -0.419324, 0.654081, 0.62956, 0, 494.397, 0)
+light_color = Color(0.956863, 1, 0.921569, 1)
+light_angular_distance = 0.5
+shadow_enabled = true
+directional_shadow_mode = 1
+sky_mode = 1
+
+[node name="dev_track" parent="Game" instance=ExtResource("3_tng5q")]
+
+[node name="sedanSports" parent="Game" instance=ExtResource("4_vhwnn")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.2, 235)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nm2au")
+
+[node name="AI" type="Node3D" parent="."]
+
+[node name="AICar" type="Node3D" parent="AI"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 238)
+script = ExtResource("6_o6ajw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AI/AICar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11742, 0)
+mesh = SubResource("BoxMesh_6v1wu")
+
+[node name="Marker3D" type="Marker3D" parent="AI/AICar"]
+transform = Transform3D(-4.00939e-08, -0.398333, 0.917241, -1.74117e-08, 0.917241, 0.398333, -1, 0, -4.37114e-08, 3.35411, 2.7087, 0)
+
+[node name="Target1" type="Marker3D" parent="AI/AICar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -149.344, 0, -211.191)
+
+[connection signal="change_camera" from="Game/sedanSports" to="ChaseCamera" method="_on_change_camera"]
+[connection signal="set_info" from="Game/sedanSports" to="." method="_on_set_info"]
